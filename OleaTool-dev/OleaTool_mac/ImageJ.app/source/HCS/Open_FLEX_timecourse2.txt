@@ -1,0 +1,135 @@
+dir = getDirectory("Choose Source Directory ");
+list = getFileList(dir);
+var count2;
+var stack;
+
+//find first sub-folder
+for (i=0; i<list.length; i++) 
+	{
+	if (endsWith(list[i], "/"))	
+		{
+			//write(list[i]);
+		list2 = getFileList(dir+list[i]);
+		i=list.length;
+		}
+	}
+
+	
+
+
+
+firstFile=true;
+setForegroundColor(255, 255, 255);
+setFont("SansSerif", 38, "antiliased");
+count=0
+
+
+Dialog.create("Open all FLEX to Montage");
+
+Dialog.addChoice("WellIndex",list2);
+Dialog.addNumber("Red slice",3);
+Dialog.addNumber("Green slice",1);
+Dialog.addNumber("Blue slice", 2);
+
+
+Dialog.addNumber("Red Max", 20);
+Dialog.addNumber("Green Max",10);
+Dialog.addNumber("Blue Max", 200);
+Dialog.addNumber("Auto scale",0);
+Dialog.addNumber("Number of Rows", 3);
+Dialog.show();
+
+wellIndex = Dialog.getChoice();
+redS= Dialog.getNumber();
+greenS= Dialog.getNumber();
+blueS =  Dialog.getNumber()
+
+redMax= Dialog.getNumber();
+greenMax= Dialog.getNumber();
+blueMax =  Dialog.getNumber();
+autoScale = Dialog.getNumber();
+rows = Dialog.getNumber();
+//showMessage(autoScale);
+autoTxt="";
+if (autoScale==1) autoTxt=" auto_contrast";
+
+//showMessage(autoTxt);
+
+   count = 0;
+	count2=0;
+   countFiles(dir);
+   n = 0;
+   processFiles(dir);
+
+
+
+selectImage(stack);
+setSlice(count2+1);
+run("Delete Slice");
+
+
+
+function countFiles(dir) {
+      list = getFileList(dir);
+      for (i=0; i<list.length; i++) {
+          if (endsWith(list[i], "/"))
+              countFiles(""+dir+list[i]);
+          else
+              count++;
+      }
+  }
+
+  function processFiles(dir) {
+      list = getFileList(dir);
+      for (i=0; i<list.length; i++) {
+          if (endsWith(list[i], "/"))
+              processFiles(""+dir+list[i]);
+          else {
+             showProgress(n++, count);
+             path = dir+list[i];
+		//ite(list[i]+"  " + wellIndex+".flex");
+		if (list[i]== wellIndex)
+			{
+	             processFile(path);}
+          }
+      }
+  }
+
+
+function processFile(path)
+	{	count2++;
+		run("Bio-Formats Windowless Importer", "open=["+path+"]");
+		flexID=getImageID();
+		run("Opened FLEX to RGB", "red_slice="+redS +" green_slice="+greenS +" blue_slice="+blueS +" red_Max="+redMax+" green_Max="+greenMax+" blue_Max="+blueMax+autoTxt);
+		//write("red=1 green=2 blue=3 red="+redMax+" green="+greenMax+" blue="+blueMax+autoTxt);
+
+		rgbID=getImageID();
+
+		if(floor(nSlices/rows)==round(nSlices/rows))
+			{cols = (nSlices/rows);}
+		else	{cols = floor(nSlices/rows)+1;}
+
+		run("Make Montage...", "columns="+cols+" rows="+rows+" scale=0.5 first=1 last="+nSlices+" increment=1 border=3 label");
+		montageID=getImageID();
+		drawString(list[i], getWidth()-300, getHeight()-20);
+		if (count2==1)
+			{firstFile=false;
+			newImage(dir, "RGB white", getWidth(), getHeight(), 1);
+			stack = getImageID();
+			}
+		selectImage(montageID);
+		run("Select All");
+		run("Copy");
+		selectImage(stack);
+		setSlice(count2);
+		run("Paste");
+		run("Add Slice");
+		setSlice(count2);
+		setMetadata(dir);
+		selectImage(montageID);
+		close();	
+		selectImage(rgbID);
+		close();
+		selectImage(flexID);
+		close();
+	}

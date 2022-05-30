@@ -1,0 +1,53 @@
+//run("Subtract Background...", "rolling=50 stack");
+
+
+
+title = getTitle();
+
+Dialog.create("BleedThru Calc values");
+  Dialog.addNumber("AxAm slice",1);
+  Dialog.addNumber("DxDm slice", 3);
+  Dialog.addNumber("DxAm slice",2);
+  Dialog.show();
+
+axamSlice = Dialog.getNumber()-1;	
+dxdmSlice = Dialog.getNumber()-1;	
+dxamSlice = Dialog.getNumber()-1;	
+
+ a1 = newArray(4);
+names = newArray(3);
+names[axamSlice]="AxAm";
+names[dxdmSlice]="DxDm";
+names[dxamSlice]="DxAm";
+
+currentRow = nResults
+
+
+//names=newArray("AxAm", "DxDm", "DxAm")
+
+
+setResult("Label", nResults, title);
+
+ if (selectionType==-1)
+         exit("This macro requires an area selection");
+
+      for (i=1; i<=nSlices; i++) 
+	{
+          setSlice(i);
+          getStatistics(area, mean);
+	a1[i-1] = mean;	   
+	setResult(names[i-1], currentRow, a1[i-1] );
+
+          }
+
+if(a1[1]<a1[0])
+          {setResult("ADE", currentRow ,(a1[dxamSlice])/a1[axamSlice] );}
+else{
+          setResult("DBT", currentRow ,(a1[dxamSlice]/a1[dxdmSlice] ));
+	}
+
+ updateResults()
+   
+
+
+

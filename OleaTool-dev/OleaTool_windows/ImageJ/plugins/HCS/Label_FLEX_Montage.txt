@@ -1,0 +1,48 @@
+stack = getImageID();
+getSelectionBounds(x, y, width, height)
+
+path = File.openDialog("Select a File");
+str = File.openAsString(path) ;
+lines=split(str,"\n")
+
+
+for(i=1; i<nSlices; i++)
+	{
+	setSlice(i);
+	wellIndex = getMetadata("Label");
+	pad = 2;
+	//write(wellIndex);
+	//if(lengthOf(wellIndex)==14)
+//		pad=3;
+//	wellIndex = substring(wellIndex, pad, lengthOf(wellIndex)-5);
+	findTreatment(wellIndex, lines);
+	
+	}
+
+
+
+function findTreatment(wellIndex, lines)
+	{treatment ="";
+	tab=0;
+	c="";
+	for(k=1; k<lengthOf(lines); k++)
+		{
+		curRow = lines[k];
+		tab = lastIndexOf(curRow, ",");
+		c = "0"+substring(lines[k], 0, tab)+".flex";
+		//write(c + " L:"+ lengthOf(c));
+		
+		if(lengthOf(c)==13) 	c="0"+c;
+		//write(wellIndex+" "+ c);
+		if(wellIndex==c)
+			{treatment = substring(lines[k], tab+1,lengthOf(lines[k]));
+		//	write(wellIndex+" "+ c+ " "+ treatment);
+			setFont("SansSerif", 24, "antiliased");
+			;
+			drawString(treatment, getWidth()-300, getHeight()-40);}
+		}
+	}
+
+
+
+

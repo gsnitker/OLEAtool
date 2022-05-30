@@ -1,0 +1,50 @@
+
+      requires("1.33s");
+	currTitle = getTitle();
+	currID=getImageID();
+	run("32-bit");
+      dir1 = getDirectory("Choose Source Directory ");
+
+    	list = getFileList(dir1);
+ 	n=0;
+	liffStr= ".lif -";
+
+
+	lifTag=indexOf(currTitle ,liffStr, 0)
+
+	//showMessage(""+lifTag);
+
+
+
+
+      for (i=0; i<list.length; i++) 
+	{
+          	showProgress(i+1, list.length);
+	startOfBH = 	 lifTag + lengthOf(liffStr) +1;
+	BHfile = substring(currTitle, startOfBH, lengthOf(currTitle));
+	
+	//write(""+list[i] + "\t" + BHfile +"\t"+ indexOf(list[i], BHfile));
+	if ((indexOf(list[i], BHfile)==8)||(indexOf(list[i], BHfile)==11))
+		{
+		//showMessage(""+list[i]);
+		run("Text Image... ", "open=["+dir1+list[i]+"]");
+		run("32-bit");
+		run("Select All");
+		run("Copy");
+		close();
+
+		selectImage(currID);
+		setSlice(nSlices);
+		run("Add Slice");
+
+
+		run("Specify...", "width=256 height=256 x=8 y=0 slice="+nSlices);
+		run("Paste");
+		setMetadata("Label", list[i]);
+		
+		}
+			
+
+            }
+
+

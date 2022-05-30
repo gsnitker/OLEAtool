@@ -1,0 +1,11 @@
+
+title = getTitle()
+run("Duplicate...", "title=["+title+"] duplicate");
+
+//run("Brightness/Contrast...");
+//setMinAndMax(1500, 3500);
+
+//run("FLIM");
+
+run("RGB Color");
+rename("RGB "+ title);

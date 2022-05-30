@@ -1,0 +1,73 @@
+dir = getDirectory("Choose Source Directory ");
+list = getFileList(dir);
+firstFile=true;
+setForegroundColor(255, 255, 255);
+setFont("SansSerif", 38, "antiliased");
+count=0
+
+
+Dialog.create("FLEX to Montage");
+Dialog.addNumber("Red Max", 2000);
+Dialog.addNumber("Green Max",1000);
+Dialog.addNumber("Blue Max", 2000);
+Dialog.addNumber("Auto scale",1);
+Dialog.addNumber("Number of Rows", 3);
+Dialog.show();
+
+redMax= Dialog.getNumber();
+greenMax= Dialog.getNumber();
+blueMax =  Dialog.getNumber();
+autoScale = Dialog.getNumber();
+rows = Dialog.getNumber();
+
+//showMessage(autoScale);
+
+autoTxt="";
+if (autoScale==1) autoTxt=" auto_contrast";
+
+//showMessage(autoTxt);
+
+for(i=0; i<list.length; i++)	
+	{path = dir+list[i];
+	if (endsWith(path, ".flex")) 
+		{count=count+1;
+		run("Bio-Formats Windowless Importer", "open=["+path+"]");
+		flexID=getImageID();
+		run("FLEX to RGB", "red_slice=1 green_slice=2 blue_slice=3 red_Max="+redMax+" green_Max="+greenMax+" blue_Max="+blueMax+autoTxt);
+		//write("red=1 green=2 blue=3 red="+redMax+" green="+greenMax+" blue="+blueMax+autoTxt);
+
+		rgbID=getImageID();
+
+		if(floor(nSlices/rows)==round(nSlices/rows))
+			{cols = (nSlices/rows);}
+		else	{cols = floor(nSlices/rows)+1;}
+
+		run("Make Montage...", "columns="+cols+" rows="+rows+" scale=0.5 first=1 last="+nSlices+" increment=1 border=3 label");
+		montageID=getImageID();
+		drawString(list[i], getWidth()-300, getHeight()-20);
+		if (firstFile)
+			{firstFile=false;
+			newImage(dir, "RGB white", getWidth(), getHeight(), 1);
+			stack = getImageID();
+			}
+		selectImage(montageID);
+		run("Select All");
+		run("Copy");
+		selectImage(stack);
+		setSlice(count);
+		run("Paste");
+		run("Add Slice");
+		setSlice(count);
+		setMetadata(list[i]);
+		selectImage(montageID);
+		close();	
+		selectImage(rgbID);
+		close();
+		selectImage(flexID);
+		close();
+		}
+	}
+selectImage(stack);
+setSlice(count+1);
+run("Delete Slice");
+

@@ -1,0 +1,158 @@
+
+origID = getImageID();
+origTitle = getTitle();
+
+getThreshold(threshNumber, threshMax);
+getStatistics(area, mean, min, max, std, histogram);
+
+if(threshNumber==-1) threshNumber = 0;
+
+
+Dialog.create("DAPI analysis")
+Dialog.addNumber("Max. size",250);
+Dialog.addNumber("Min. circularity",0.75);
+Dialog.addChoice("Smooth:", newArray("None","Mean 3x3", "Median 3x3","Gaussian 3x3"));
+
+Dialog.addChoice("Threshold:", newArray( "Otsu", "Maximum Entropy","IsoData","Numeric"));
+
+Dialog.addNumber("Numeric Threshold",threshNumber);
+Dialog.addCheckbox("BG correct original", false);
+Dialog.addCheckbox("Watershed", false);
+Dialog.addCheckbox("Show Overlay image", true);
+Dialog.addCheckbox("Show Excluded Objects", false);
+Dialog.addCheckbox("Clear existing results", false);
+
+Dialog.show();
+
+maxSize = Dialog.getNumber();
+minCirc = Dialog.getNumber();
+
+smooth = Dialog.getChoice();
+thresh = Dialog.getChoice();
+threshNumber = Dialog.getNumber();
+BGcorr = Dialog.getCheckbox();
+watershed= Dialog.getCheckbox();
+overlay = Dialog.getCheckbox();
+showExcluded = Dialog.getCheckbox();
+clear=Dialog.getCheckbox();
+clearString = "clear ";
+
+if (!clear) clearString = "";
+
+selectImage(origID);
+
+if (BGcorr) run("Subtract Background...", "rolling=50");
+
+//duplicate original to create mask
+run("Select All");
+run("Duplicate...", "title=segmented_mask");
+maskID = getImageID();
+
+selectImage(nImages);
+
+if (smooth=="Median 3x3") run("Median...", "radius=1");
+if (smooth=="Mean 3x3") run("Mean...", "radius=1 separable");
+if (smooth=="Gaussian 3x3")  run("Gaussian Blur...", "radius=1");
+
+if(thresh=="Numeric") 
+	{setThreshold(threshNumber,max);
+	run("Convert to Mask");
+	thresh="thresh of "+ threshNumber;
+	}
+
+run("8-bit");
+
+if(thresh=="Otsu")
+	{run("OtsuThresholding 8Bit");
+	run("Convert to Mask");
+	thresh = "Otsu";
+	
+	}
+
+if (thresh=="Maximum Entropy")
+	{run("Maximum Entropy Threshold"); 
+	run("Invert");
+	thresh = "MEnt";
+	}
+	
+if (thresh=="IsoData")
+	{setAutoThreshold();
+	run("Convert to Mask");
+	thresh = "isodata";
+	}
+
+if (watershed) run("Watershed");
+setAutoThreshold();
+run("Set Measurements...", "area mean circularity redirect=["+origTitle+"] decimal=2");
+run("Analyze Particles...", "size=0-"+maxSize+" circularity="+minCirc+"-1.00 show=Outlines display "+ clearString+"exclude");
+
+
+outlineTitle = getTitle();
+outlineID = getImageID();
+
+if(showExcluded&&overlay)
+	{
+	selectImage(maskID);
+//set excluded by size
+	run("Analyze Particles...", "size="+maxSize+1+"-infinity circularity=0-1.00 show=Outlines exclude");
+	sizeExc= getImageID();
+	selectImage(sizeExc);
+	run("Invert");
+	run("Red");
+	run("RGB Color");
+
+//get excluded by circularirt
+	selectImage(maskID);
+	run("Analyze Particles...", "size=0-infinity circularity=0-"+minCirc-0.001+" show=Outlines exclude");
+	circExc= getImageID();
+	selectImage(circExc);
+
+	run("Invert");
+	run("Blue");
+	run("RGB Color");
+	}
+selectImage(maskID);
+close();
+//create overlay image
+selectImage(outlineID);
+
+if(overlay)
+	{run("Invert");
+	run("Green");
+	//run("Edit LUT...");
+	run("RGB Color");
+	maskTitle = getTitle();
+	selectImage(origID);
+	titleString = origTitle+" overlay " + thresh;
+	run("Duplicate...", "title="+titleString);
+	rename(titleString);
+	duplicateTitle = getTitle();
+	duplicateID = getImageID;
+	run("RGB Color");
+	imageCalculator("Subtract", duplicateID ,outlineID );
+	imageCalculator("Add", duplicateID ,outlineID );
+	if(showExcluded)
+		{imageCalculator("Subtract", duplicateID ,sizeExc);
+		imageCalculator("Subtract", duplicateID ,circExc );
+		imageCalculator("Add", duplicateID ,circExc);
+		imageCalculator("Add", duplicateID ,sizeExc );
+		selectImage(circExc);
+		close();
+		selectImage(sizeExc);
+		close();
+		}
+	selectImage(outlineID);
+	close();
+	}
+	selectImage(duplicateID);
+setFont("SansSerif", 20, "antiliased");
+setColor(255, 0, 0);
+drawString("size", 10, 30);
+setColor(0, 0, 255);
+drawString("circ.", 10, 50);
+setColor(255,0,255);
+drawString("both", 10, 70);
+
+
+
+

@@ -1,0 +1,436 @@
+// Action Bar description file :OLEAtool_workflow
+run("Action Bar","/plugins/ActionBar/OLEAtool_workflow.txt");  
+exit();
+
+//<stickToImageJ>
+
+
+<line>
+<text>                                          Welcome to OLEAtool
+</line>
+<line>
+<text>                           Click each metric to record measurement  
+</line>
+<line>
+<text>
+</line>
+
+<line>
+<button> line 1
+label=Initiate OLEAtool...
+icon=noicon
+arg=<macro>
+//Table.create("OLEAtool Output");
+run("Image Sequence...");
+//run("Label...", "format=0 starting=1 interval=1 x=5 y=20 font=80 text=[] use_text");
+path = getInfo("image.directory");
+dir1 = File.getParent(path);
+pollen = File.getName(path);
+sample = File.getName(dir1);
+view = substring(pollen, 0, 2)
+pnum = substring(pollen, 4)
+setResult("Sample", nResults, sample);
+setResult("View", nResults-1, view);
+setResult("Pollen Num", nResults-1, pnum);
+setResult("P", nResults-1, NaN);
+setResult("E", nResults-1, NaN);
+setResult("P/E ratio", nResults-1, NaN);
+setResult("EV Ex", nResults-1, NaN);
+setResult("MES", nResults-1, NaN);
+setResult("max Lumina M", nResults-1, NaN);
+setResult("PV Ex", nResults-1, NaN);
+setResult("DAC", nResults-1, NaN);
+setResult("max Lumina A", nResults-1, NaN);
+setResult("Muri", nResults-1, NaN);
+run("Set Measurements...", "area centroid shape feret's redirect=None decimal=3");
+
+setTool("line");
+</macro>
+</line>
+<line>
+
+</line>
+<line>
+<text>                                         Manual Measurements
+
+</line>
+
+<line>
+<text>           Polar View
+<separator>
+<text>        Equatorial View
+</line>
+
+<line>
+<button> 1 line 1
+label=Measure PV Ex...
+icon=noicon
+arg=<macro>
+	PVEx = getValue("Length"); 
+        setResult("PV Ex", nResults-1, PVEx);
+</macro>
+<separator>
+<button> 3 line 1
+label=Measure P...
+icon=noicon
+arg=<macro>
+  P = getValue("Length");
+  setResult("P", nResults-1, P);
+</macro>
+</line>
+
+<line>
+<button> 1 line 2
+label=Measure DAC...
+icon=noicon
+arg=<macro>
+	DAC = getValue("Length"); 
+        setResult("DAC", nResults-1, DAC);
+</macro>
+<separator>
+<button> 3 line 2
+label=Measure E...
+icon=noicon
+arg=<macro>
+	E = getValue("Length");
+        setResult("E", nResults-1, E);
+</macro>
+</line>
+
+<line>
+<button> 1 line 3
+label=Measure Lumina A...
+icon=noicon
+arg=<macro>
+max_lum_A = getValue("Length"); 
+setResult("max Lumina A", nResults-1, max_lum_A);
+</macro>
+<separator>
+<button> 3 line 3
+label=Measure EV Ex...
+icon=noicon
+arg=<macro>
+	EVEx = getValue("Length"); 
+	setResult("EV Ex", nResults-1, EVEx);
+</macro>
+</line>
+
+<line>
+<button> 1 line 4
+label=Measure Muri...
+icon=noicon
+arg=<macro>
+	Muri = getValue("Length"); 
+        setResult("Muri", nResults-1, Muri);
+</macro>
+<separator>
+<button> 3 line 4
+label=Measure MES...
+icon=noicon
+arg=<macro>
+	MES = getValue("Length"); 
+        setResult("MES", nResults-1, MES);
+</macro>
+</line>
+
+<line>
+<separator>
+<separator>
+<button> 3 line 5
+label=Measure Lumina M...
+icon=noicon
+arg=<macro>
+max_lum_M = getValue("Length"); 
+setResult("max Lumina M", nResults-1, max_lum_M);
+</macro>
+</line>
+
+<line>
+<separator>
+<separator>
+<button> 3 line 6
+label=Measure Muri...
+icon=noicon
+arg=<macro>
+	Muri = getValue("Length"); 
+        setResult("Muri", nResults-1, Muri);
+</macro>
+</line>
+<line>
+</line> 
+<line>
+<text>                                       Extended Lumina Module
+
+</line>
+<line>
+<separator>
+<button> line 10
+label=Launch module 
+icon=noicon
+arg=<macro>
+
+run("Select None");
+        IJ.renameResults("Results_");
+	path = getInfo("image.directory");
+	window = File.getName(path);
+
+Dialog.create("OLEAtool Lumina Module");
+Dialog.addMessage("Please select your current view");
+items = newArray("Polar View (PV)", "Equatorial View (EV)");
+Dialog.addChoice("       ", items, "Polar View (PV)");
+Dialog.show;
+
+view = Dialog.getChoice();
+setTool("polygon");
+ run("Duplicate...", "duplicate");
+	stack1 = File.getName(path);
+    stack1 = stack1 + "-1";
+       	waitForUser("OLEAtool Lumina Module", "\n\n1. Draw a polygon within the interior of the pollen grain. \n\n \n\n2. Click OK to run particle analysis and complete measurement.\n\n");
+        run("Add Selection...");
+        run("Overlay Options...", "stroke=green width=5 fill=none set apply");
+	run("8-bit");
+    run("Threshold...");
+    waitForUser("OLEAtool Lumina Module", "1. Adjust threshold limits and type until lumina are highlighted in red.\n \n2. When threshold looks correct, click OK to close this dialogue.");
+
+    close("Threshold");
+    run("Restore Selection");
+    
+    run("Analyze Particles...", "size=0.05-4.00 exclude overlay add slice");
+    selectWindow(window);
+    //run("Duplicate...", "duplicate");
+    //stack2 = getInfo("window.title");
+    //run("8-bit");
+    //wait(500);
+    //run("Combine...");
+    run("Restore Selection");
+    run("Add Selection...");
+    run("Overlay Options...", "stroke=green width=5 fill=none set apply");
+    Overlay.setPosition(0)
+    roiManager("Show All");
+    selectWindow(stack1);
+    close();
+    run("Wand Tool...", "tolerance=30 mode=8-connected smooth");
+    setTool("wand");
+    waitForUser("OLEAtool Lumina Module", "When you have completed all adjustments to the lumina selection, click OK to measure and save results.");
+    
+  
+  
+  
+    roiManager("Measure");
+
+  
+    Table.create("Lumina Results"); 
+    
+    for (i=0; i<(nResults); i++) {
+      Table.set("Index", i, i+1);
+      area = getResult("Area",i);      
+      Table.set("Area", i, area);
+      
+      CentroidX = getResult("X",i);      
+      Table.set("CentroidX", i, CentroidX);
+      
+      CentroidY = getResult("Y",i);      
+      Table.set("CentroidY", i, CentroidY);
+      
+      MinLength = getResult("MinFeret",i);      
+      Table.set("MinLength", i, MinLength);
+      
+      MaxLength = getResult("Feret",i);      
+      Table.set("MaxLength", i, MaxLength);
+      
+      Circularity = getResult("Circ.",i);      
+      Table.set("Circularity", i, Circularity);
+      
+      AspectRatio = getResult("AR",i);      
+      Table.set("AspectRatio", i, AspectRatio);
+           
+      roi = RoiManager.getName(i);
+      Table.set("ROI", i, roi);
+    
+    Table.set("View", i, view);
+       Table.update;
+    }
+    if (isOpen("Results")){
+    selectWindow("Results");
+    run("Close");
+    
+    if (isOpen("ROI Manager")){
+	selectWindow("ROI Manager");
+	run("Close");
+    }
+    
+    wait(3000);
+    waitForUser("OLEAtool Lumina Module", "Click OK to save Lumina Results");
+    
+    selectWindow("Lumina Results");
+    saveAs("results");
+    
+    selectWindow(window);
+    saveAs("jpeg");
+    
+    wait(1000);
+     run("Remove Overlay");
+    
+    wait(1000);
+
+    setTool("line");
+
+
+    if (isOpen("Lumina Results.csv")){
+    selectWindow("Lumina Results.csv");
+    run("Close");
+    
+    if (isOpen("Results_")){
+    IJ.renameResults("Results_","Results");
+    }
+    
+</macro>
+<separator>
+</line>
+<line>
+</line>
+<line>
+<button> line 9
+label=Open New Image Sequence...
+icon=noicon
+arg=<macro>
+if (nImages!=0) {
+P = getResult("P", nResults-1);
+E = getResult("E", nResults-1);
+PE = P / E;
+  setResult("P/E ratio", nResults-1, PE);
+updateResults();
+path = getInfo("image.directory");
+window = File.getName(path);
+close(window);
+}
+run("Image Sequence...");
+run("Label...", "format=0 starting=1 interval=1 x=5 y=20 font=80 text=[] use_text");
+path = getInfo("image.directory");
+dir1 = File.getParent(path);
+pollen = File.getName(path);
+sample = File.getName(dir1);
+view = substring(pollen, 0, 2);
+pnum = substring(pollen, 4);
+setResult("Sample", nResults, sample);
+setResult("View", nResults-1, view);
+setResult("Pollen Num", nResults-1, pnum);
+setResult("P", nResults-1, NaN);
+setResult("E", nResults-1, NaN);
+setResult("P/E ratio", nResults-1, NaN);
+setResult("EV Ex", nResults-1, NaN);
+setResult("MES", nResults-1, NaN);
+setResult("max Lumina M", nResults-1, NaN);
+setResult("PV Ex", nResults-1, NaN);
+setResult("DAC", nResults-1, NaN);
+setResult("max Lumina A", nResults-1, NaN);
+setResult("Muri", nResults-1, NaN);
+
+setTool("line");
+
+</macro>
+</line>
+<line>
+<button> line 10
+label=Save Results 
+icon=noicon
+arg=<macro>
+P = getResult("P", nResults-1)
+E = getResult("E", nResults-1)
+PE = P / E
+  setResult("P/E ratio", nResults-1, PE);
+updateResults();
+//selectWindow();
+saveAs("Results");
+</macro>
+</line>
+<line>
+<button> line 10
+label=Close all windows
+icon=noicon
+arg=<macro>
+ while (nImages>0) { 
+          selectImage(nImages); 
+          close(); }
+
+if (isOpen("Results")){
+
+	selectWindow("Results");
+	run("Close");
+}
+if (isOpen("Results_")){
+
+	selectWindow("Results_");
+	run("Close");
+}
+
+if (isOpen("ROI Manager")){
+
+	selectWindow("ROI Manager");
+	run("Close");
+}
+
+exit("Close OLEAtool by closing workflow window");
+</macro>
+</line>
+
+<line>
+</line>
+<line>
+<button> 1 line 8
+label=Set Scale
+icon=noicon
+arg=<macro>
+       setTool("line");
+       waitForUser("OLEAtool","Instructions for setting the scale for this session:\n\n 	\n\n  \n\n1. Locate scale on the selected image.\n\n \n\n2. Use Draw Line tool to 	select a known length.\n\n \n\n3. Click OK when finished.");
+
+Dialog.create("OLEAtool");
+       Dialog.addMessage("         Select units:");
+       items = newArray("µm", "mm");
+       Dialog.addChoice("            ", items, "µm");
+       Dialog.show;
+      
+       choice1 = Dialog.getChoice();
+       if (choice1 == "µm") {
+	run("Set Scale...");
+	run("Set Scale...", "unit=µm global");  
+       }
+       if (choice1 == "mm") {
+	run("Set Scale...");
+	run("Set Scale...", "unit=mm global");  
+}
+</macro>
+<button> 2 line 8
+label=Adj. Scale Bar
+icon=noicon
+arg=<macro>
+       Dialog.create("OLEAtool");
+       Dialog.addMessage("Add scale bar to all images?");
+       items = newArray("Yes", "No");
+       Dialog.addChoice("                  ", items, "Yes");
+       Dialog.show;
+            
+       choice4 = Dialog.getChoice();
+       if (choice4 == "Yes") {
+       
+       Dialog.create("OLEAtool");
+       Dialog.addString("Length of scale bar", "length in units", 15);
+       Dialog.show;
+       scalebar =  Dialog.getString();   
+       addscale = 1;
+       };
+        
+       if (choice4 == "No") {addscale = 2};
+       if (addscale  == 1) {
+       run("Scale Bar...", "width=scalebar height=6 font=28 color=Green background=None location=[Lower Left] overlay");
+       }
+</macro>
+<button> 3 line 8
+label=Show Morphology Diagram
+icon=noicon
+arg=<macro>
+        dir = getDirectory("macros");
+        open(dir + "OleaTool/olea_morphology.png");
+</macro>
+</line>
+// end of file

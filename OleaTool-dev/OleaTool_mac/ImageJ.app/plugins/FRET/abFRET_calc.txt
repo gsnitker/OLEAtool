@@ -1,0 +1,31 @@
+//run("Subtract Background...", "rolling=50 stack");
+title = getTitle()
+ a1 = newArray(6);
+
+currentRow = nResults
+
+names=newArray("DxDmPre", "AxAmPre", "WFBleach before", "DxDmPost", "AxAmPost", "WFBleach after")
+setResult("Label", nResults, title);
+
+ if (selectionType==-1)
+         exit("This macro requires an area selection");
+
+      for (i=1; i<=nSlices; i++) 
+	{
+          setSlice(i);
+          getStatistics(area, mean);
+	a1[i-1] = mean;	   
+	setResult(names[i-1], currentRow , a1[i-1] );
+
+//	write(names[i-1]+"\t"+a1[i-1]);
+          }
+//	write("%E" +"\t"+(a1[2]-a1[0])/a1[2]);
+//	write("%Bleach" +"\t"+(a1[1]-a1[3])/a1[1]);
+
+          setResult("%E", currentRow ,(a1[3]-a1[0])/a1[3] );
+          setResult("%Bl", currentRow ,(a1[1]-a1[4])/a1[1] );
+ updateResults()
+   
+
+
+

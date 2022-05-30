@@ -1,0 +1,47 @@
+
+      requires("1.33s");
+	
+      dir1 = getDirectory("Choose Source Directory ");
+
+	Dialog.create("New Image");
+	Dialog.addChoice("Type:", newArray("Photons", "Tau1", "Tau2", "Chi", "Amp1"));
+	Dialog.show();
+	prefix = Dialog.getChoice();
+    	list = getFileList(dir1);
+ 	n=0;
+
+      for (i=0; i<list.length; i++) 
+	{
+          	showProgress(i+1, list.length);
+	
+          	if (startsWith(list[i], prefix)&&!endsWith(list[i], ".tif"))
+           		{n++;
+                run("Text Image... ", "open=["+dir1+list[i]+"]");}
+         	else {	     print("Not "+prefix+" Image: "+dir1+list[i]);
+            	
+	           }
+                  }
+
+lastImageID=getImageID();
+width=getWidth();
+height=getHeight();
+
+dir1Trim = substring(dir1, 0, lengthOf(dir1)-1);
+folderName = substring(dir1Trim, lastIndexOf(dir1Trim,File.separator)+1, lengthOf(dir1Trim));
+
+newImage(prefix +"  " + folderName, "32-bit Black", width, height, n);
+newID = getImageID();
+	
+for (i=n; i>0; i--)
+	{selectImage(nImages-1);
+	title=getTitle();	
+	run("Select All");
+	run("Copy");
+	close();
+	selectImage(newID);
+	setSlice(i);
+	run("Paste");
+	setMetadata(title) ;
+	}
+
+run("Enhance Contrast", "saturated=0.5");

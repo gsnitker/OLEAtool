@@ -1,0 +1,4 @@
+
+ch1=getImageID();
+run("Stack Interleaver");
+run("Subtract Background...", "rolling=50 stack");run("HiLo");

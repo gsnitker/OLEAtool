@@ -1,0 +1,40 @@
+	      requires("1.33s");
+
+      dir1 = getDirectory("Choose Source Directory ");
+      dir2 = getDirectory("Choose Destination Directory ");
+      list = getFileList(dir1);
+	//add dialog for channels and fovs
+
+	fov=5;
+	nCh=3;
+     setBatchMode(true);
+      for (i=0; i<list.length; i++)
+	{print("File: "+dir1+list[i]);
+          	showProgress(i+1, list.length);
+      	if (endsWith(list[i], '.flex'))
+		{
+	         	run("Bio-Formats Windowless Importer","open=[" + dir1 + list[i]+"]");
+		flexID=getImageID();
+		for (F=1; F<fov+1; F++)
+			{
+			for(C=1; C<nCh+1; C++)
+				{
+                			selectImage(flexID);
+				setSlice(F*C);
+				run("Duplicate...", "title=new-1");
+				
+				//print(dir2 +"f"+F +"_c"+ C +"_"+ list[i]);
+				name = substring(list[i], 1, lengthOf(list[i])-5)+"_f" + F +"_c"+ C;
+				print(name);
+		                  	saveAs("tif", dir2 + name);
+				close();
+				selectImage(flexID);
+				
+          				}
+			}
+          		}	
+	//close();
+	}
+    setBatchMode(false);
+
+

@@ -1,0 +1,26 @@
+// OLEAtool Experimental Dev Launcher
+//
+// This macro launches the initial setup of OLEAtool 
+//
+// Grant Snitker
+// USFS Southern Research Station
+// University of Georgia
+// grant.snitker@uga.edu
+// 2021
+ 
+
+macro "Launch OLEAtool Action Tool - C000C111D86D88C111D87C111D79C111D89C111D78C111D7aC111D98D99C111D97Da9C111D8aD96C111D77Da8Db9C111Db8C111Da7C111D9aDb6Db7C222Dc6Dc8Dc9C222Da6DaaC222DbaDc7C222D76C222DcaC222Dc5C222D85C222D75C222D6aDb5C333D72C333D65D69C333D66D68C333D67C333D64D7bC333D74C333D55D56D82C333D57C333D54D58C333Db4C333Db3C333D59C444D8bC444D6bC444D5aC444D46C444D47C444D45D48D92C444D49Da2C444D5bC444D4aC444D83C444D4bD53D9bC555DabC555D44D73C555D95C555D5cC555DbbC555D38C555D62C555D37D63Dc4C555D7cDa5C555D4cD6cD8cC555D39D9cC555C666DacC666D36C666D5dC666DcbC666Dd8C666D3aD71C666D6dD7dD84D8dC777Dd7C777D81C777D9dC777D93C777DbcDd9C777D35C777C888D43C888DadC888Da3Db2C888D91Dd6C999D52C999D3bC999D7eC999D8eC999D61C999D6eC999DdaCaaaD4dCaaaD9eCaaaD34CaaaDc3CaaaCbbbDa4CbbbDbdCbbbDccCbbbD5eCcccDa1CcccDd5CcccD3cCcccD27CcccD28CcccCdddDaeCdddDdbCdddD29CdddD26D94CdddCeeeD51CeeeD42CeeeD7fCeeeD8fCeeeD33CeeeD2aCeeeDd4CeeeD25CeeeD80CeeeD6fCfffD70CfffD4eD9fCfffDc2CfffDcdCfffDb1DbeCfffD3dCfffD90De8CfffDe7CfffD2bDdcCfffD60De9CfffD24CfffD5fDafDe6CfffD32D41Da0Dd3Dea"{
+
+//Set colors
+    run("Colors...", "foreground=white background=black selection=cyan");
+
+// Splash screen
+    macdir = getDirectory("macros");
+       call("ij.gui.ImageWindow.setNextLocation", screenHeight/2, screenWidth/10);
+       open(macdir + "OleaTool/Welcome.png");
+       wait(2500);
+       while (nImages>0) { 
+          selectImage(nImages); 
+          close(); 
+      } 
+       run("OLEAtool workflow");

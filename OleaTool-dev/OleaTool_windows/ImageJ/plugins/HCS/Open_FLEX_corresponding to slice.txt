@@ -1,0 +1,9 @@
+
+if(endsWith(getMetadata(), "flex"))
+	{	
+	run("Bio-Formats Windowless Importer", "open=["+getTitle()+getMetadata()+"]");
+	}
+else
+	{showMessage("Error","Slice label is not a flex file name.");}
+
+

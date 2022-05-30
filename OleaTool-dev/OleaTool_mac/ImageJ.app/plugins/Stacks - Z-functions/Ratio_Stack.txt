@@ -1,0 +1,71 @@
+origID = getImageID();
+
+
+Dialog.create("Ratio Stack");
+Dialog.addCheckbox("Ch1 ÷ Ch2?", true) ;
+Dialog.addCheckbox("Use whole stack as mask", false) ;
+Dialog.addNumber("Rmin", 0.2) ;
+Dialog.addNumber("Rmax", 2.0) ;
+Dialog.show() ;
+
+seq = Dialog.getCheckbox() ;
+useStack=Dialog.getCheckbox() ;
+Rmin = Dialog.getNumber() ;
+Rmax = Dialog.getNumber() ;
+
+
+
+selectImage(origID);
+
+run("DeInterleave ", "how=2 keep");
+if(seq==false)
+	{ch2ID = getImageID();
+	selectImage(nImages-1);
+	ch1ID=getImageID();}
+else
+	{
+	ch1ID = getImageID();
+	selectImage(nImages-1);
+	ch2ID=getImageID();
+	}
+
+
+
+imageCalculator("Divide 32-bit stack", ch2ID,ch1ID);
+selectImage(nImages);
+resultID = getImageID();
+resultTitle = getTitle();
+
+
+if(useStack)
+	{selectImage(ch2ID);
+	run("Duplicate...", "title=mask duplicate");
+	setAutoThreshold();
+	run("Convert to Mask", "stack");
+	run("Despeckle", "stack");
+	run("Invert", "stack");
+	run("Invert LUT");
+	maskID = getImageID();
+	}
+else
+	{selectImage(origID);
+	run("Z Project...", "start=1 stop="+nSlices+" projection=[Max Intensity]");
+	setAutoThreshold();
+	run("Convert to Mask");
+	run("Despeckle");
+	run("Invert");
+	run("Invert LUT");
+	maskID = getImageID();}
+
+imageCalculator("Subtract stack", resultID, maskID);
+run("Ratio ");
+setMinAndMax(Rmin, Rmax);
+selectImage(maskID);
+close();
+selectImage(ch1ID);
+close();
+selectImage(ch2ID);
+close();
+
+
+

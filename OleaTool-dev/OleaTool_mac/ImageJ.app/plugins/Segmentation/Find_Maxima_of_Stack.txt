@@ -1,0 +1,22 @@
+
+origID=getImageID();
+setBatchMode(true);
+
+s=nSlices;
+for (i=1; i<s+1; i++)
+	{selectImage(origID);
+	setSlice(i);
+	run("Find Maxima...", "noise=10 output=[Segmented Particles] above");
+	if(i==1)
+		{newID=getImageID();}
+	if(i>1)
+		{
+		run("Copy");
+		close();
+		selectImage(newID);
+		run("Add Slice");
+		run("Paste");
+		}
+
+	}
+setBatchMode(false);

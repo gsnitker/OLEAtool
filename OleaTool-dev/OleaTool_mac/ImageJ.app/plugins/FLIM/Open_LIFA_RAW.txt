@@ -1,0 +1,23 @@
+  path = File.openDialog("Select a File");
+  dir = File.getParent(path);
+  name = File.getName(path);
+
+binNo = getNumber("Camera Binning", 2)
+
+if(binNo==2)
+{	width=696;
+	height=520;
+}
+
+if(binNo!=2)
+{	width = 1392/binNo;
+	height = 1032/binNo;
+}
+
+
+run("Raw...", "open=["+dir+File.separator+name+"] image=[32-bit Real] width="+width+" height="+height+" offset=0 number=9999 gap=0 little-endian");
+//run("DeInterleave ", "number=4");
+run("Enhance Contrast", "saturated=0.35");
+
+run("Histogram", "bins=256 x_min=0 x_max=4 y_max=Auto");
+

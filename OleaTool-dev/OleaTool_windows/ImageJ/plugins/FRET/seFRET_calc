@@ -1,0 +1,57 @@
+Dialog.create("seFRET Calc values");
+  Dialog.addNumber("AxAm slice",1);
+  Dialog.addNumber("DxDm slice", 3);
+  Dialog.addNumber("DxAm slice",2);
+	
+  Dialog.addNumber("Donor Bleed through, DBT", 0.06);
+  Dialog.addNumber("Acceptor Direct Excitation, ADE", 0.04);
+  Dialog.addNumber("Spectral correction Factor, g",1);
+
+  Dialog.show();
+
+axamSlice = Dialog.getNumber()-1;	
+dxdmSlice = Dialog.getNumber()-1;	
+dxamSlice = Dialog.getNumber()-1;	
+
+
+DBT= Dialog.getNumber();
+ADE = Dialog.getNumber();
+g= Dialog.getNumber();
+
+//run("Subtract Background...", "rolling=50 stack");
+title = getTitle()
+a1 = newArray(4);
+
+names = newArray(3);
+names[axamSlice]="AxAm";
+names[dxdmSlice]="DxDm";
+names[dxamSlice]="DxAm";
+//names=newArray("AxAm", "DxDm", "DxAm")
+
+currentRow = nResults
+
+setResult("Label", nResults, title);
+
+ if (selectionType==-1)
+         exit("This macro requires an area selection");
+
+      for (i=1; i<=nSlices; i++) 
+	{
+          setSlice(i);
+          getStatistics(area, mean);
+	a1[i-1] = mean;	   
+	setResult(names[i-1], currentRow , a1[i-1] );
+          }
+
+
+FRET = a1[dxamSlice]-(DBT*a1[dxdmSlice])-(ADE*a1[axamSlice]);
+
+      setResult("aFRET", currentRow ,FRET);
+      setResult("%E", currentRow ,1-(a1[dxdmSlice]/(a1[dxdmSlice]+(g*FRET))));
+
+
+ updateResults()
+   
+
+
+

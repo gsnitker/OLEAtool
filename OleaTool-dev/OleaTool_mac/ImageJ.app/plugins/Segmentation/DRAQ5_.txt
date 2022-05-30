@@ -1,0 +1,51 @@
+
+getThreshold(cytoThresh , nucThresh)
+origID=getImageID();
+
+run("Duplicate...", "title=nuc");
+run("Gaussian Blur...", "sigma=1");
+setThreshold(nucThresh, 255);
+run("Convert to Mask");
+run("Erode");
+run("Fill Holes");
+run("Watershed");
+run("Ultimate Points");
+run("Multiply...", "value=255");
+run("Dilate");
+run("Dilate");
+nucID=getImageID();
+selectImage(origID);
+run("Duplicate...", "title=cyto");
+cytoID=getImageID();
+run("Gaussian Blur...", "sigma=1");
+run("Divide...", "value=2");
+imageCalculator("Add", cytoID,nucID);
+setThreshold(cytoThresh , 255);
+
+run("Find Maxima...", "noise=50 output=[Segmented Particles] above");
+segmentedID=getImageID();
+setThreshold(1, 25500);
+run("Analyze Particles...", "size=150-25000 circularity=0.00-1.00 show=Outlines add");
+
+maskID=getImageID();
+//run("Invert");
+//imageCalculator("Subtract create", origID,maskID);
+//run("HiLo");
+
+closeTemp=1;
+
+if(closeTemp==1)
+	{selectImage(cytoID);
+	close();
+	selectImage(nucID);
+	close();
+	selectImage(maskID);
+	close();
+	selectImage(segmentedID);
+	close();
+}
+
+
+selectImage(origID);
+setOption("Show All",true);
+//roiManager("Measure");
