@@ -2,11 +2,11 @@
 
 ## An open-source tool for measuring *Olea europaea* pollen morphology in ImageJ
 
-Developed by Grant Snitker, Gabriel Servera-Vives, and Cristina Ricucci 
+Developed by Grant Snitker, Gabriel Servera-Vives, and Cristina Ricucci\
 
 **Citation**
 
-Mercuri, A.M.; Ricucci, C.; Snitker, G.; Florenzano, A.; Torri, P.; Servera-Vives, G. (2022): In search of new tools to trace back the history of olive cultivation. Medpalynos Abstract Book. 
+Mercuri, A.M.; Ricucci, C.; Snitker, G.; Florenzano, A.; Torri, P.; Servera-Vives, G. (2022): In search of new tools to trace back the history of olive cultivation. *Medpalynos* Abstract Book. 
 
 Servera-Vives, G.; Ricucci, C.; Snitker, G. (Forthcoming): OLEAtool: an open-source software for morphopalynological research in Olea europaea L. pollen grains. Manuscript in preparation for *Open Research Europe*.
 
