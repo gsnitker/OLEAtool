@@ -6,7 +6,7 @@ Developed by Grant Snitker, Gabriel Servera-Vives, and Cristina Ricucci
 <br>
 <br>
 
-**Citation**
+**Citing this work**
 
 Mercuri, A.M.; Ricucci, C.; Snitker, G.; Florenzano, A.; Torri, P.; Servera-Vives, G. (2022): In search of new tools to trace back the history of olive cultivation. *Medpalynos* Abstract Book. 
 
