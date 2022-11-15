@@ -19,4 +19,4 @@ This software was developed in the framework of the OLEA-project funded by the 
 
 Report bugs to gsnitker@newmexicoconsortium.org
 
-![OLEAtool](https://github.com/gsnitker/OLEAtool/blob/main/OleaTool-dev/info/OLEA_project.jpg?raw=true)
+![OLEAtool](https://github.com/gsnitker/OLEAtool/blob/main/OleaTool/info/OLEA_project.jpg?raw=true)
