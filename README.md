@@ -6,12 +6,12 @@ Developed by Grant Snitker, Gabriel Servera-Vives, and Cristina Ricucci
 <br>
 <br>
 
-Download and start-up instructions 
-•	1. Download OLEAtool .zip folder from GitHub - (see Snitker et al., 2022 and Severa-Vives et. al, 2023)
-•	2. Unzip the folder and place in an easily accessible location, such as the desktop, applications folder, or the home drive.
-•	3. The file structure for photos of pollen used in OLEAtool can be arranged in any manner that is convenient to the user. However, we suggest creating a main folder with an identifying sample number (e.g., sample type, location, or depth) that contains subfolders containing photo sequences for each individual pollen grain that is analyzed. Please note that the main folder name and image file names are extracted and used to create a sample identifier in OLEAtool results table.
-•	4. Open ImageJ and click the “Launch OLEAtool” option from the “More Tools” menu, which can be accessed by clicking the double arrows on the righthand side of the ImageJ toolbar.
-•	5. Click the OLEAtool icon to initiate the program’s start window. A splash screen with the OLEAtool logo will appear on the screen and close. The main menu will then appear, providing the user with a choice to run the manual measurement module or the lumina module in OLEAtool.
+**Download and start-up instructions** 
+1. Download OLEAtool .zip folder from GitHub - (see Snitker et al., 2022 and Severa-Vives et. al, 2023)
+2. Unzip the folder and place in an easily accessible location, such as the desktop, applications folder, or the home drive.
+3. The file structure for photos of pollen used in OLEAtool can be arranged in any manner that is convenient to the user. However, we suggest creating a main folder with an identifying sample number (e.g., sample type, location, or depth) that contains subfolders containing photo sequences for each individual pollen grain that is analyzed. Please note that the main folder name and image file names are extracted and used to create a sample identifier in OLEAtool results table.
+4. Open ImageJ and click the “Launch OLEAtool” option from the “More Tools” menu, which can be accessed by clicking the double arrows on the righthand side of the ImageJ toolbar.
+5. Click the OLEAtool icon to initiate the program’s start window. A splash screen with the OLEAtool logo will appear on the screen and close. The main menu will then appear, providing the user with a choice to run the manual measurement module or the lumina module in OLEAtool.
 
 <br>
 <br>
